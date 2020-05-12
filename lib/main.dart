@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -27,15 +28,26 @@ class MagicBall extends StatefulWidget {
 
 class _MagicBallState extends State<MagicBall> {
   var chosenImage = 1;
+  void startRoll() {
+    var end = DateTime.now().add(Duration(seconds: 5));
+    Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if ((DateTime.now().difference(end)) > Duration(seconds: 0)) {
+        timer.cancel();
+      } else {
+        setState(() {
+          chosenImage = Random().nextInt(5) + 1;
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Center(
         child: FlatButton(
           onPressed: () {
-            setState(() {
-              chosenImage = Random().nextInt(5) + 1;
-            });
+            startRoll();
           },
           child: Image(
             image: AssetImage('images/ball$chosenImage.png'),
